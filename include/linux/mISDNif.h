@@ -387,6 +387,7 @@ clear_channelmap(u_int nr, u_char *map)
 #define MISDN_CTRL_HFC_ECHOCAN_OFF 	0x4008
 #define MISDN_CTRL_HFC_WD_INIT		0x4009
 #define MISDN_CTRL_HFC_WD_RESET		0x400A
+#define MISDN_CTRL_SYNC			0xFFFF
 
 /* special RX buffer value for MISDN_CTRL_RX_BUFFER request.p1 is the minimum
  * buffer size request.p2 the maximum. Using  MISDN_CTRL_RX_SIZE_IGNORE will
@@ -400,6 +401,7 @@ clear_channelmap(u_int nr, u_char *map)
 struct mISDN_ctrl_req {
 	int		op;
 	int		channel;
+	int		sync;
 	int		p1;
 	int		p2;
 };

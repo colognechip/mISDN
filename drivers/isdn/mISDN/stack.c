@@ -439,8 +439,10 @@ connect_layer1(struct mISDNdevice *dev, struct mISDNchannel *ch,
 		       adr->channel, adr->sapi, adr->tei);
 	switch (protocol) {
 	case ISDN_P_NT_S0:
+	case ISDN_P_NT_UP0:
 	case ISDN_P_NT_E1:
 	case ISDN_P_TE_S0:
+	case ISDN_P_TE_UP0:
 	case ISDN_P_TE_E1:
 		ch->recv = mISDN_queue_message;
 		ch->peer = &dev->D.st->own;
@@ -590,7 +592,9 @@ delete_channel(struct mISDNchannel *ch)
 	}
 	switch (ch->protocol) {
 	case ISDN_P_NT_S0:
+	case ISDN_P_NT_UP0:
 	case ISDN_P_TE_S0:
+	case ISDN_P_TE_UP0:
 	case ISDN_P_NT_E1:
 	case ISDN_P_TE_E1:
 		write_lock_bh(&ch->st->l1sock.lock);

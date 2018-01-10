@@ -94,6 +94,19 @@
 #define L1_UNSET_TESTLOOP_B2		0x08
 #define L1_UNSET_TESTLOOP_D		0x09
 
+/* source is line interface N (R_SU_SYNC register bits 2..0) */
+#define L1_SET_SYNC_SRC_INTF0	0x0A
+#define L1_SET_SYNC_SRC_INTF1	0x0B
+#define L1_SET_SYNC_SRC_INTF2	0x0C
+#define L1_SET_SYNC_SRC_INTF3	0x0D
+
+/* source is SYNC_I signal */
+#define L1_SET_SYNC_SRC_SYNC_I	0x0E
+
+/* automatic synchronization source selection (R_SU_SYNC register bit 3) */
+#define L1_SET_SYNC_SRC_MAN	0x0F
+#define L1_UNSET_SYNC_SRC_MAN	0x10
+
 
 /* xhfc Layer1 Flags (stored in xhfc_port_t->l1_flags) */
 #define HFC_L1_ACTIVATING	1
@@ -187,6 +200,8 @@ struct xhfc {
 	__u8 ti_wd;		/* timer interval */
 	__u8 pcm_md0;
 	__u8 pcm_md1;
+
+	__u8 su_sync;		/* ST/Up synchronization */
 
 	__u32 fifo_irq;		/* fifo bl irq */
 	__u32 fifo_irqmsk;	/* fifo bl irq */

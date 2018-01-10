@@ -257,6 +257,8 @@ data_sock_release(struct socket *sock)
 	switch (sk->sk_protocol) {
 	case ISDN_P_TE_S0:
 	case ISDN_P_NT_S0:
+	case ISDN_P_TE_UP0:
+	case ISDN_P_NT_UP0:
 	case ISDN_P_TE_E1:
 	case ISDN_P_NT_E1:
 		if (sk->sk_state == MISDN_BOUND)
@@ -526,6 +528,8 @@ data_sock_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
 	switch (sk->sk_protocol) {
 	case ISDN_P_TE_S0:
 	case ISDN_P_NT_S0:
+	case ISDN_P_TE_UP0:
+	case ISDN_P_NT_UP0:
 	case ISDN_P_TE_E1:
 	case ISDN_P_NT_E1:
 		mISDN_sock_unlink(&data_sockets, sk);
@@ -795,6 +799,8 @@ mISDN_sock_create(struct net *net, struct socket *sock, int proto, int kern)
 		break;
 	case ISDN_P_TE_S0:
 	case ISDN_P_NT_S0:
+	case ISDN_P_TE_UP0:
+	case ISDN_P_NT_UP0:
 	case ISDN_P_TE_E1:
 	case ISDN_P_NT_E1:
 	case ISDN_P_LAPD_TE:

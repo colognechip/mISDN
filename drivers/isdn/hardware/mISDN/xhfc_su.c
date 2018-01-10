@@ -75,7 +75,14 @@ char *XHFC_PH_COMMANDS[] = {
 	"L1_SET_TESTLOOP_D",
 	"L1_UNSET_TESTLOOP_B1",
 	"L1_UNSET_TESTLOOP_B2",
-	"L1_UNSET_TESTLOOP_D"
+	"L1_UNSET_TESTLOOP_D",
+	"L1_SET_SYNC_SRC_INTF0",
+	"L1_SET_SYNC_SRC_INTF1",
+	"L1_SET_SYNC_SRC_INTF2",
+	"L1_SET_SYNC_SRC_INTF3",
+	"L1_SET_SYNC_SRC_SYNC_I",
+	"L1_SET_SYNC_SRC_MAN",
+	"L1_UNSET_SYNC_SRC_MAN"
 };
 
 
@@ -476,6 +483,41 @@ xhfc_ph_command(struct port *port, u_char command)
 			write_xhfc(xhfc, A_SL_CFG, 0);
 			write_xhfc(xhfc, R_SLOT, port->idx * 8 + 5);
 			write_xhfc(xhfc, A_SL_CFG, 0);
+			break;
+
+		case L1_SET_SYNC_SRC_INTF0:
+			/* source is line interface 0 */
+			write_xhfc(xhfc, R_SU_SYNC, SET_V_SYNC_SEL(xhfc->su_sync, 0x00));
+			break;
+
+		case L1_SET_SYNC_SRC_INTF1:
+			/* source is line interface 1 */
+			write_xhfc(xhfc, R_SU_SYNC, SET_V_SYNC_SEL(xhfc->su_sync, 0x01));
+			break;
+
+		case L1_SET_SYNC_SRC_INTF2:
+			/* source is line interface 2 */
+			write_xhfc(xhfc, R_SU_SYNC, SET_V_SYNC_SEL(xhfc->su_sync, 0x02));
+			break;
+
+		case L1_SET_SYNC_SRC_INTF3:
+			/* source is line interface 3 */
+			write_xhfc(xhfc, R_SU_SYNC, SET_V_SYNC_SEL(xhfc->su_sync, 0x03));
+			break;
+
+		case L1_SET_SYNC_SRC_SYNC_I:
+			/* source is SYNC_I signal */
+			write_xhfc(xhfc, R_SU_SYNC, SET_V_SYNC_SEL(xhfc->su_sync, 0x04));
+			break;
+
+		case L1_SET_SYNC_SRC_MAN:
+			/* manual sync source selection */
+			write_xhfc(xhfc, R_SU_SYNC, SET_V_MAN_SYNC(xhfc->su_sync, 0x01));
+			break;
+
+		case L1_UNSET_SYNC_SRC_MAN:
+			/* automatic sync source selection */
+			write_xhfc(xhfc, R_SU_SYNC, SET_V_MAN_SYNC(xhfc->su_sync, 0x00));
 			break;
 	}
 }
@@ -1213,6 +1255,40 @@ channel_ctrl(struct port *p, struct mISDN_ctrl_req *cq)
 				xhfc_ph_command(p, L1_SET_TESTLOOP_D);
 			} else {
 				xhfc_ph_command(p, L1_UNSET_TESTLOOP_D);
+			}
+			spin_unlock_bh(&p->xhfc->lock);
+			break;
+
+		case MISDN_CTRL_SYNC:
+			/*
+			 * control sync source
+			 *
+			 */
+			if ((cq->channel < 0) || (cq->channel > 7)) {
+				ret = -EINVAL;
+				break;
+			}
+
+			spin_lock_bh(&p->xhfc->lock);
+			if (cq->sync & 1) {
+				xhfc_ph_command(p, L1_SET_SYNC_SRC_INTF0);
+			}
+			if (cq->sync & 2) {
+				xhfc_ph_command(p, L1_SET_SYNC_SRC_INTF1);
+			}
+			if (cq->sync & 3) {
+				xhfc_ph_command(p, L1_SET_SYNC_SRC_INTF2);
+			}
+			if (cq->sync & 4) {
+				xhfc_ph_command(p, L1_SET_SYNC_SRC_INTF3);
+			}
+			if (cq->sync & 5) {
+				xhfc_ph_command(p, L1_SET_SYNC_SRC_SYNC_I);
+			}
+			if (cq->sync & 6) {
+				xhfc_ph_command(p, L1_SET_SYNC_SRC_MAN);
+			} else {
+				xhfc_ph_command(p, L1_UNSET_SYNC_SRC_MAN);
 			}
 			spin_unlock_bh(&p->xhfc->lock);
 			break;
